@@ -1,0 +1,37 @@
+# Backend - Django/Python
+lms_backend/db.sqlite3
+lms_backend/__pycache__/
+lms_backend/*/__pycache__/
+lms_backend/*/*/__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.Python
+lms_backend/venv/
+lms_backend/env/
+lms_backend/.env
+lms_backend/.venv/
+
+# Frontend - Node/React
+lms_frontend/node_modules/
+lms_frontend/dist/
+lms_frontend/.env
+lms_frontend/.env.local
+lms_frontend/npm-debug.log*
+lms_frontend/yarn-error.log*
+lms_frontend/.DS_Store
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
