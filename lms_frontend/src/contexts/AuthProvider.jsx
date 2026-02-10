@@ -1,53 +1,46 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import {
-  loginUser,
-  logoutUser,
-  getCurrentUser,
   registerUser,
+  loginUser,
+  getCurrentUser,
 } from "../services/authService";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within an AuthProvider");
+  if (!context) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
   return context;
 };
 
-export default function AuthProvider({ children }) {
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   const register = async (userData) => {
-    const data = await registerUser(userData);
-    if (data?.user_id) {
-      setUser({
-        id: data.user_id,
-        username: data.username,
-        email: data.email,
-        role: data.role,
-      });
-    }
-    return data;
+    return await registerUser(userData);
   };
 
   const login = async (credentials) => {
     const res = await loginUser(credentials);
-    setUser(res?.user ?? null);
-    return res;
+    localStorage.setItem("token", res.token);
+    localStorage.setItem("refresh", res.refresh);
+    await loadUser();
   };
 
-  const logout = async () => {
-    await logoutUser();
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("refresh");
     setUser(null);
-    window.location.href = "/login";
   };
 
-  const fetchUser = async () => {
+  const loadUser = async () => {
     try {
       const res = await getCurrentUser();
-      setUser(res?.user ?? null);
-    } catch {
+      setUser(res?.user || null);
+    } catch (error) {
       setUser(null);
     } finally {
       setIsAuthLoading(false);
@@ -55,21 +48,23 @@ export default function AuthProvider({ children }) {
   };
 
   useEffect(() => {
-    fetchUser();
+    loadUser();
   }, []);
+
 
   return (
     <AuthContext.Provider
       value={{
         user,
         isAuthLoading,
+        register,
         login,
         logout,
-        register,
-        fetchUser,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
-}
+};
+
+export default AuthProvider;

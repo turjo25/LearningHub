@@ -1,68 +1,98 @@
-import { Link } from "react-router-dom";
-import { useAuth } from "../contexts/AuthProvider.jsx";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthProvider";
 
-export default function Navbar() {
-  const { logout, user } = useAuth();
+function Navbar() {
+  const { user, logout, isAuthLoading } = useAuth();
+  const navigate = useNavigate();
+
+  if (isAuthLoading) return null;
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
-    <nav className="w-full flex items-center justify-between p-4 border-b border-gray-200 bg-white">
-      <Link to="/" className="font-bold text-xl text-gray-800">
-        My LMS
-      </Link>
-      <ul className="flex items-center gap-2">
-        <li>
-          <Link to="/" className="p-2 rounded-md hover:bg-gray-100 font-medium">
-            Home
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/courses"
-            className="p-2 rounded-md hover:bg-gray-100 font-medium"
-          >
-            Courses
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/profile"
-            className="p-2 rounded-md hover:bg-gray-100 font-medium"
-          >
-            Profile
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/admin"
-            className="p-2 rounded-md hover:bg-gray-100 font-medium"
-          >
-            Dashboard
-          </Link>
-        </li>
-        <li className="ml-2">
-          {user ? (
-            <>
-              <span className="text-sm text-gray-600 mr-2">
-                {user.username} ({user.role})
-              </span>
-              <button
-                type="button"
-                onClick={logout}
-                className="bg-red-600 text-white p-2 rounded-md hover:bg-red-700"
+    <nav className="w-full bg-linear-to-r from-blue-600 to-indigo-700 shadow-lg sticky top-0 z-50">
+      <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
+        {/* Logo */}
+        <Link to="/" className="flex items-center space-x-2">
+          <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+            <span className="text-blue-600 font-bold text-lg">LMS</span>
+          </div>
+          <span className="text-white font-bold text-xl hidden sm:inline">
+            Learning Hub
+          </span>
+        </Link>
+
+        {/* Navigation (only when logged in) */}
+        {user && (
+          <ul className="hidden md:flex space-x-1">
+            <li>
+              <Link
+                to="/"
+                className="px-4 py-2 text-white font-medium rounded-lg hover:bg-white/20 transition"
               >
-                Logout
-              </button>
-            </>
-          ) : (
-            <Link
-              to="/login"
-              className="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700"
-            >
-              Login
-            </Link>
+                Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/courses"
+                className="px-4 py-2 text-white font-medium rounded-lg hover:bg-white/20 transition"
+              >
+                Courses
+              </Link>
+            </li>
+            {user.is_staff && (
+              <li>
+                <Link
+                  to="/admin"
+                  className="px-4 py-2 text-white font-medium rounded-lg hover:bg-white/20 transition"
+                >
+                  Admin
+                </Link>
+              </li>
+            )}
+          </ul>
+        )}
+
+        {/* Right side */}
+        <div className="flex items-center space-x-4">
+          {user && (
+            <span className="text-white text-sm font-medium hidden sm:inline">
+              {user.username}
+            </span>
           )}
-        </li>
-      </ul>
+
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition shadow-md"
+            >
+              Logout
+            </button>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-white px-4 py-2 rounded-lg hover:bg-white/20 transition"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium shadow"
+              >
+                Register
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
     </nav>
   );
 }
+
+export default Navbar;

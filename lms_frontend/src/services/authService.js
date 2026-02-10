@@ -1,77 +1,59 @@
-/**
- * Auth API: register, login (JWT), logout (blacklist), getCurrentUser, forgot/reset password, profile.
- * Uses api (axios) which attaches JWT and handles 401.
- */
-import api from './api';
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const ACCOUNTS = '/accounts';
+const API_URL = "http://localhost:8000/api";
 
-/** Register: email, username, password, first_name, last_name, role, phone (optional). Returns user + tokens. */
 export async function registerUser(userData) {
-  const { data } = await api.post(`${ACCOUNTS}/register/`, userData);
-  if (data.tokens) {
-    localStorage.setItem('token', data.tokens.access);
-    localStorage.setItem('refresh', data.tokens.refresh);
-  }
-  return data;
-}
-
-/** Login: email or username + password. Returns user + tokens. */
-export async function loginUser(credentials) {
-  const { data } = await api.post(`${ACCOUNTS}/login/`, credentials);
-  if (data.tokens) {
-    localStorage.setItem('token', data.tokens.access);
-    localStorage.setItem('refresh', data.tokens.refresh);
-  }
-  return {
-    token: data.tokens?.access,
-    refresh: data.tokens?.refresh,
-    user: {
-      id: data.user_id,
-      username: data.username,
-      email: data.email,
-      role: data.role,
-    },
-  };
-}
-
-/** Get current user (id, username, email, role). Uses protected endpoint which includes role. */
-export async function getCurrentUser() {
-  const { data } = await api.get('/protected/');
-  return { user: data?.user ?? null };
-}
-
-/** Get profile (for profile page). */
-export async function getProfile() {
-  const { data } = await api.get(`${ACCOUNTS}/profile/`);
-  return data;
-}
-
-/** Logout: blacklist refresh token. Optional body: { refresh }. */
-export async function logoutUser() {
-  const refresh = localStorage.getItem('refresh');
   try {
-    if (refresh) await api.post(`${ACCOUNTS}/logout/`, { refresh });
-  } finally {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refresh');
+    const response = await axios.post(`${API_URL}/register/`, userData);
+    loginUser({
+      phone: userData.phone,
+      password: userData.password
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+
   }
 }
 
-/** Forgot password: send email with reset link. */
-export async function forgotPassword(email) {
-  const { data } = await api.post(`${ACCOUNTS}/forgot-password/`, { email });
-  return data;
+export async function loginUser(credentials) {
+  try {
+    const response = await axios.post(`${API_URL}/login/`, {
+      phone: credentials.phone, // Using phone field
+      password: credentials.password,
+    });
+
+    return {
+      token: response.data.tokens.access,
+      refresh: response.data.tokens.refresh,
+      user: {
+        id: response.data.user_id,
+        username: response.data.username,
+      },
+    };
+  } catch (error) {
+    throw new Error(error.response?.data?.error || "Login failed");
+  }
 }
 
-/** Reset password: token (from email) + new_password. */
-export async function resetPassword(token, newPassword) {
-  const { data } = await api.post(`${ACCOUNTS}/reset-password/`, { token, new_password: newPassword });
-  return data;
-}
+export async function getCurrentUser() {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return { user: null };
+    }
 
-/** Update profile. */
-export async function updateProfile(updates) {
-  const { data } = await api.patch(`${ACCOUNTS}/profile/`, updates);
-  return data;
+    const response = await axios.get(`${API_URL}/protected/`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    console.log('getCurrentUser response:', response.data);
+    return { user: response.data };
+  } catch (error) {
+    console.error('getCurrentUser error:', error);
+    return { user: null };
+  }
 }
