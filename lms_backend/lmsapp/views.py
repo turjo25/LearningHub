@@ -61,22 +61,17 @@ class LoginView(APIView):
 
 
 class ProtectedView(APIView):
-    """Protected view that requires authentication. Returns user + role (for backward compat)."""
+    """Protected view that requires authentication."""
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         user = request.user
-        try:
-            role = request.user.profile.role
-        except Exception:
-            role = 'student'
         user_data = {
             'user_id': user.id,
             'username': user.username,
             'email': user.email,
             'first_name': user.first_name,
-            'last_name': user.last_name,
-            'role': role,
+            'last_name': user.last_name
         }
         return Response({
             'message': 'successfully fetched this user',

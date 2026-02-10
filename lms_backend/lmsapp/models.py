@@ -2,17 +2,9 @@ from django.db import models
 
 from django.contrib.auth.models import User
 
-# Role choices for role-based access control (used by accounts app)
-class Role(models.TextChoices):
-    ADMIN = 'admin', 'Admin'
-    INSTRUCTOR = 'instructor', 'Instructor'
-    STUDENT = 'student', 'Student'
-
-
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=20, blank=True, null=True)  # optional for email-based login
-    role = models.CharField(max_length=20, choices=Role.choices, default=Role.STUDENT)
+    phone = models.CharField(max_length=20, unique=True)
 
     def __str__(self):
         return f"{self.user.username} - {self.phone}"

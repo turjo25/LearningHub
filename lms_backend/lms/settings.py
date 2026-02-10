@@ -40,11 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    'rest_framework',
-    'rest_framework_simplejwt.token_blacklist',
-    'accounts',
     'lmsapp',
-    'lms_core',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -165,7 +162,3 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
-
-# Email (console backend for dev; no SMTP required)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'noreply@lms.local'
