@@ -1,39 +1,27 @@
-import axios from "axios";
+import api, { unwrap } from "./api";
 
-const API_URL = "http://localhost:8000/api";
-
-export async function createTeacher(teacherData) {
-  try {
-    const response = await axios.post(`${API_URL}/teacher/`, teacherData,
-      {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      }
-    );
-    console.log(response.data);
-    
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+export async function getTeachers(params = {}) {
+  const response = await api.get("/teacher/", { params });
+  return unwrap(response.data);
 }
 
 export async function getTeacherDetails(id) {
-  try {
-    const response = await axios.get(`${API_URL}/teacher/${id}/`,
-      {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      }
-    );
-    console.log(response.data);
+  const response = await api.get(`/teacher/${id}/`);
+  return response.data;
+}
 
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+export async function getTeacherByUser(userId) {
+  const response = await api.get("/teacher/", { params: { user: userId } });
+  const data = unwrap(response.data);
+  return Array.isArray(data) && data.length > 0 ? data[0] : null;
+}
+
+export async function createTeacher(teacherData) {
+  const response = await api.post("/teacher/", teacherData);
+  return response.data;
+}
+
+export async function updateTeacher(id, data) {
+  const response = await api.patch(`/teacher/${id}/`, data);
+  return response.data;
 }

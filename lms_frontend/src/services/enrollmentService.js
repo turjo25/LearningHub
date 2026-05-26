@@ -1,21 +1,16 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:8000/api";
+import api, { unwrap } from "./api";
 
 export async function createEnrollment(enrollmentData) {
-  try {
-    const response = await axios.post(`${API_URL}/enrollment/`, enrollmentData,
-      {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      }
-    );
-    console.log(response.data);
-    
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+  const response = await api.post("/enrollment/", enrollmentData);
+  return response.data;
+}
+
+export async function getEnrollments(params = {}) {
+  const response = await api.get("/enrollment/", { params });
+  return unwrap(response.data);
+}
+
+export async function deleteEnrollment(id) {
+  const response = await api.delete(`/enrollment/${id}/`);
+  return response.data;
 }

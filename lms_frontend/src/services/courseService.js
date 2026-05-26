@@ -1,47 +1,41 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:8000/api";
+import api, { unwrap } from "./api";
 
 export async function createCourse(courseData) {
-  try {
-    const response = await axios.post(`${API_URL}/course/`, courseData,
-      {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      }
-    );
-    console.log(response.data);
-    
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+  const response = await api.post("/course/", courseData);
+  return response.data;
 }
 
-export async function getCourses() {
-  try {
-    const response = await axios.get(`${API_URL}/course/`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+export async function getCourses(params = {}) {
+  const response = await api.get("/course/", { params });
+  return unwrap(response.data);
 }
 
 export async function getCourseById(courseId) {
-  try {
-    const response = await axios.get(`${API_URL}/course/${courseId}/`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await api.get(`/course/${courseId}/`);
+  return response.data;
+}
+
+export async function updateCourse(id, data) {
+  const response = await api.put(`/course/${id}/`, data);
+  return response.data;
+}
+
+export async function deleteCourse(id) {
+  const response = await api.delete(`/course/${id}/`);
+  return response.data;
+}
+
+/**
+ * Upload a thumbnail image for a course.
+ * @param {number} courseId
+ * @param {File} file
+ * @returns {{ thumbnail_url: string }}
+ */
+export async function uploadCourseThumbnail(courseId, file) {
+  const formData = new FormData();
+  formData.append("thumbnail", file);
+  const response = await api.post(`/course/${courseId}/thumbnail/`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return response.data;
 }

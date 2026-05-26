@@ -16,11 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from lmsapp.views import RegisterView
-from django.urls import path,include
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/register/',RegisterView.as_view(),name='regsiter'),
-    path('',include('lmsapp.urls'))
-
+    path('api/register/', RegisterView.as_view(), name='register'),
+    # Token refresh endpoint used by the axios interceptor for silent re-auth
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('', include('lmsapp.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

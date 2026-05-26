@@ -24,14 +24,21 @@ A full-stack Learning Management System (LMS) where teachers can create and mana
 ```
 LMS/
 ├── lms_backend/          # Django REST API
-│   ├── accounts/         # User authentication & profiles
-│   ├── lms_core/         # Core LMS functionality
-│   ├── lmsapp/           # Courses, lessons, assignments
+│   ├── lms/              # Settings and main URL router
+│   ├── lmsapp/           # App models, views, serializers, permissions
+│   ├── media/            # Uploaded avatars and course thumbnails (git-ignored)
 │   └── manage.py         # Django management
 └── lms_frontend/         # React application
-    ├── components/       # UI components
-    ├── services/         # API calls
-    └── contexts/         # State management
+    ├── src/
+    │   ├── components/   # Semantically organized React components
+    │   │   ├── layout/   # Common shell elements (Navbar, Sidebar, Footer)
+    │   │   ├── auth/     # User login, registration, and profile views
+    │   │   ├── dashboard/# Student, Teacher, and Admin control consoles
+    │   │   ├── courses/  # Catalog list, details page, certificate visualizer
+    │   │   ├── lessons/  # Player views, completed buttons, and lesson builder
+    │   │   └── assignments/# Submissions, homework list, gradebook manager
+    │   ├── services/     # Axios client and endpoints integration logic
+    │   └── contexts/     # AuthProvider session state context
 ```
 
 ## 🚀 Quick Start

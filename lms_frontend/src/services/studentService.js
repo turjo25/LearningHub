@@ -1,39 +1,22 @@
-import axios from "axios";
+import api, { unwrap } from "./api";
 
-const API_URL = "http://localhost:8000/api";
-
-export async function createStudent(studentData) {
-  try {
-    const response = await axios.post(`${API_URL}/student/`, studentData,
-      {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      }
-    );
-    console.log(response.data);
-    
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+export async function getStudents(params = {}) {
+  const response = await api.get("/student/", { params });
+  return unwrap(response.data);
 }
 
-export async function getTeacherDetails(id) {
-  try {
-    const response = await axios.get(`${API_URL}/teacher/${id}/`,
-      {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      }
-    );
-    console.log(response.data);
+export async function getStudentById(id) {
+  const response = await api.get(`/student/${id}/`);
+  return response.data;
+}
 
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+export async function getStudentByUser(userId) {
+  const response = await api.get("/student/", { params: { user: userId } });
+  const data = unwrap(response.data);
+  return Array.isArray(data) && data.length > 0 ? data[0] : null;
+}
+
+export async function createStudent(studentData) {
+  const response = await api.post("/student/", studentData);
+  return response.data;
 }
