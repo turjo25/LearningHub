@@ -138,7 +138,7 @@ function Navbar({ toggleSidebar }) {
                 </button>
 
                 {showNotifications && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white border border-slate-100 rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.12)] py-2 z-50 max-h-96 overflow-y-auto animate-fade-in">
+                  <div className="fixed sm:absolute top-16 sm:top-full right-4 left-4 sm:right-0 sm:left-auto mt-2 w-auto sm:w-80 bg-white border border-slate-100 rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.12)] py-2 z-50 max-h-96 overflow-y-auto animate-fade-in">
                     <div className="px-4 py-3 border-b border-slate-50 flex items-center justify-between">
                       <p className="text-sm font-bold text-slate-900">Notifications</p>
                       {unreadCount > 0 && (
