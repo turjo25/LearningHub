@@ -28,13 +28,24 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ue=@7$6l$%)2p&h*0bn=)dz5x5g(@0uvt#$r64wex+2fmh14d*'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = ['*']  # Allow all hosts for Docker
+if not SECRET_KEY:
+    if DEBUG:
+        # Generate a random, temporary secret key dynamically for local development
+        import secrets
+        SECRET_KEY = secrets.token_urlsafe(50)
+    else:
+        from django.core.exceptions import ImproperlyConfigured
+        raise ImproperlyConfigured("The SECRET_KEY environment variable must be set in production.")
+
+ALLOWED_HOSTS = ['*', '.railway.app', 'localhost', '127.0.0.1']
+
+# CSRF Trusted Origins for Railway Deployments
+CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
 
 
 # Application definition
