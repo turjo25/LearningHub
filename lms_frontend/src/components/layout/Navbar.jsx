@@ -91,7 +91,7 @@ function Navbar({ toggleSidebar }) {
               style={{ background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" }}>
               <GraduationCap className="w-5 h-5 text-white" />
             </div>
-            <span className="hidden sm:block font-display font-bold text-lg text-slate-900 tracking-tight group-hover:text-brand-600 transition-colors duration-200">
+            <span className="font-display font-bold text-base sm:text-lg text-slate-900 tracking-tight group-hover:text-brand-600 transition-colors duration-200">
               Learning<span className="text-brand-500">Hub</span>
             </span>
           </Link>
@@ -179,7 +179,7 @@ function Navbar({ toggleSidebar }) {
                 <button
                   id="profile-dropdown-btn"
                   onClick={() => { setShowDropdown(p => !p); setShowNotifications(false); }}
-                  className="hidden sm:flex items-center gap-2.5 px-2 py-1.5 rounded-xl hover:bg-slate-100 transition-all duration-200"
+                  className="flex items-center gap-2.5 px-2 py-1.5 rounded-xl hover:bg-slate-100 transition-all duration-200"
                   aria-label="User menu"
                 >
                   {user.avatar_url ? (
@@ -229,7 +229,7 @@ function Navbar({ toggleSidebar }) {
             </>
           ) : (
             <>
-              <Link to="/login" className="btn-ghost text-sm hidden sm:inline-flex">Sign In</Link>
+              <Link to="/login" className="btn-ghost text-sm inline-flex">Sign In</Link>
               <Link to="/register" className="btn-primary">
                 Get Started
               </Link>

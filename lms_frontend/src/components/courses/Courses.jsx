@@ -154,17 +154,22 @@ function Courses() {
 
             {/* Level select */}
             <div className="relative">
-              <SlidersHorizontal className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <SlidersHorizontal className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
               <select
                 id="level-filter"
                 value={selectedLevel}
                 onChange={(e) => setSelectedLevel(e.target.value)}
-                className="glass-input pl-10 h-11 appearance-none pr-8 min-w-[160px] cursor-pointer"
+                className="glass-input pl-10 h-11 appearance-none pr-10 min-w-[160px] cursor-pointer"
               >
                 {LEVELS.map((l) => (
                   <option key={l.value} value={l.value}>{l.label}</option>
                 ))}
               </select>
+              <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </div>
             </div>
           </div>
 

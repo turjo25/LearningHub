@@ -240,6 +240,76 @@ function CourseDetails() {
     </div>
   );
 
+  const renderActionCard = (isMobile) => (
+    <div className={`glass-panel p-6 border-brand-100 shadow-[0_8px_30px_rgba(99,102,241,0.08)] ${isMobile ? "lg:hidden mb-6" : "hidden lg:block"}`}>
+      <div className="text-center mb-6">
+        <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">Enrollment</p>
+        <div className="text-4xl font-display font-black text-slate-900">
+          {course?.price === undefined || parseFloat(course.price) === 0 ? "Free" : `$${course.price}`}
+        </div>
+      </div>
+
+      {isEnrolled && lessonProgress.total > 0 && (
+        <div className="mb-6 p-4 rounded-xl bg-slate-50 border border-slate-100">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">Progress</span>
+            <span className={`text-xs font-black ${progressPct === 100 ? "text-green-600" : "text-brand-600"}`}>
+              {progressPct}%
+            </span>
+          </div>
+          <div className="h-2 rounded-full bg-slate-200 overflow-hidden mb-2">
+            <div
+              className={`h-full rounded-full transition-all duration-1000 ease-out ${progressPct === 100 ? "bg-green-500" : "bg-brand-500"}`}
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+          <p className="text-[11px] font-medium text-slate-500 text-center">{lessonProgress.completed} of {lessonProgress.total} lessons done</p>
+        </div>
+      )}
+
+      <div className="flex flex-col gap-3">
+        {isEnrolled ? (
+          <>
+            <Link to={`/courses/${id}/lessons`} className="btn-primary w-full shadow-brand-200">
+              <PlayCircle className="w-5 h-5" /> Continue Learning
+            </Link>
+            
+            {progressPct === 100 && certificateStatus.allGraded && certificateStatus.passed && (
+              <Link to={`/courses/${id}/certificate`} className="btn-secondary w-full bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-600 hover:text-white hover:border-emerald-600">
+                <GraduationCap className="w-5 h-5" /> View Certificate
+              </Link>
+            )}
+            {progressPct === 100 && !certificateStatus.allGraded && (
+              <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-center">
+                 <p className="text-xs font-bold text-amber-700">⏳ Waiting for Grades</p>
+              </div>
+            )}
+            {progressPct === 100 && certificateStatus.allGraded && !certificateStatus.passed && (
+              <div className="p-3 bg-red-50 rounded-xl border border-red-200 text-center">
+                 <p className="text-xs font-bold text-red-600">❌ Score too low for certificate</p>
+              </div>
+            )}
+            
+            {!hasReviewed && (
+              <button onClick={() => setShowReviewForm(!showReviewForm)} className="btn-secondary w-full bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-500 hover:text-white hover:border-amber-500">
+                <Star className="w-4 h-4" /> Rate Course
+              </button>
+            )}
+            
+            <button onClick={handleUnenroll} disabled={unenrolling} className="mt-2 text-xs font-semibold text-slate-400 hover:text-red-500 transition-colors flex items-center justify-center gap-1.5 w-full py-2">
+              {unenrolling ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LogOut className="w-3.5 h-3.5" />} 
+              Unenroll
+            </button>
+          </>
+        ) : (
+          <button onClick={handleEnroll} disabled={enrolling} className="btn-primary w-full h-12 text-base">
+            {enrolling ? <Loader2 className="w-5 h-5 animate-spin" /> : "Enroll Now"}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen py-8 max-w-5xl mx-auto page-enter px-4">
       
@@ -299,6 +369,9 @@ function CourseDetails() {
                   <span className="text-slate-500 text-sm font-medium">{reviews.length} review{reviews.length !== 1 ? "s" : ""}</span>
                 </div>
               )}
+
+              {/* Dynamic Action Card on mobile */}
+              {renderActionCard(true)}
 
               <div className="prose prose-slate prose-brand max-w-none prose-p:leading-relaxed">
                 <ReactMarkdown>{course?.description || "No description provided."}</ReactMarkdown>
@@ -388,73 +461,7 @@ function CourseDetails() {
         <div className="space-y-6 lg:sticky lg:top-8 h-fit">
           
           {/* Action Card */}
-          <div className="glass-panel p-6 border-brand-100 shadow-[0_8px_30px_rgba(99,102,241,0.08)]">
-            <div className="text-center mb-6">
-              <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">Enrollment</p>
-              <div className="text-4xl font-display font-black text-slate-900">
-                {course?.price === undefined || parseFloat(course.price) === 0 ? "Free" : `$${course.price}`}
-              </div>
-            </div>
-
-            {isEnrolled && lessonProgress.total > 0 && (
-              <div className="mb-6 p-4 rounded-xl bg-slate-50 border border-slate-100">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">Progress</span>
-                  <span className={`text-xs font-black ${progressPct === 100 ? "text-green-600" : "text-brand-600"}`}>
-                    {progressPct}%
-                  </span>
-                </div>
-                <div className="h-2 rounded-full bg-slate-200 overflow-hidden mb-2">
-                  <div
-                    className={`h-full rounded-full transition-all duration-1000 ease-out ${progressPct === 100 ? "bg-green-500" : "bg-brand-500"}`}
-                    style={{ width: `${progressPct}%` }}
-                  />
-                </div>
-                <p className="text-[11px] font-medium text-slate-500 text-center">{lessonProgress.completed} of {lessonProgress.total} lessons done</p>
-              </div>
-            )}
-
-            <div className="flex flex-col gap-3">
-              {isEnrolled ? (
-                <>
-                  <Link to={`/courses/${id}/lessons`} className="btn-primary w-full shadow-brand-200">
-                    <PlayCircle className="w-5 h-5" /> Continue Learning
-                  </Link>
-                  
-                  {progressPct === 100 && certificateStatus.allGraded && certificateStatus.passed && (
-                    <Link to={`/courses/${id}/certificate`} className="btn-secondary w-full bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-600 hover:text-white hover:border-emerald-600">
-                      <GraduationCap className="w-5 h-5" /> View Certificate
-                    </Link>
-                  )}
-                  {progressPct === 100 && !certificateStatus.allGraded && (
-                    <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-center">
-                       <p className="text-xs font-bold text-amber-700">⏳ Waiting for Grades</p>
-                    </div>
-                  )}
-                  {progressPct === 100 && certificateStatus.allGraded && !certificateStatus.passed && (
-                    <div className="p-3 bg-red-50 rounded-xl border border-red-200 text-center">
-                       <p className="text-xs font-bold text-red-600">❌ Score too low for certificate</p>
-                    </div>
-                  )}
-                  
-                  {!hasReviewed && (
-                    <button onClick={() => setShowReviewForm(!showReviewForm)} className="btn-secondary w-full bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-500 hover:text-white hover:border-amber-500">
-                      <Star className="w-4 h-4" /> Rate Course
-                    </button>
-                  )}
-                  
-                  <button onClick={handleUnenroll} disabled={unenrolling} className="mt-2 text-xs font-semibold text-slate-400 hover:text-red-500 transition-colors flex items-center justify-center gap-1.5 w-full py-2">
-                    {unenrolling ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LogOut className="w-3.5 h-3.5" />} 
-                    Unenroll
-                  </button>
-                </>
-              ) : (
-                <button onClick={handleEnroll} disabled={enrolling} className="btn-primary w-full h-12 text-base">
-                  {enrolling ? <Loader2 className="w-5 h-5 animate-spin" /> : "Enroll Now"}
-                </button>
-              )}
-            </div>
-          </div>
+          {renderActionCard(false)}
 
           {/* Instructor Card */}
           <div className="glass-panel p-6">

@@ -21,7 +21,7 @@ import MyAssignments from "./components/assignments/MyAssignments.jsx";
 import AddLesson from "./components/lessons/AddLesson.jsx";
 import GradeWork from "./components/assignments/GradeWork.jsx";
 import { Toaster } from "react-hot-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Smart dashboard that routes by role
 function Dashboard() {
@@ -43,9 +43,29 @@ function PrivateRoute({ children }) {
 
 function Layout({ children }) {
   const { user, isAuthLoading } = useAuth();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
   const location = useLocation();
   const isHome = location.pathname === '/';
+  
+  // Close sidebar on route change for mobile screens
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      setIsSidebarOpen(false);
+    }
+  }, [location.pathname]);
+
+  // Adjust sidebar state when window resizes
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsSidebarOpen(true);
+      } else {
+        setIsSidebarOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   
   if (isAuthLoading) return null;
 
@@ -56,7 +76,16 @@ function Layout({ children }) {
         <Navbar toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
         
         <div className="flex flex-1 overflow-hidden relative z-10">
-          <Sidebar isOpen={isSidebarOpen} />
+          <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+          
+          {/* Backdrop overlay for mobile when sidebar is open */}
+          {isSidebarOpen && (
+            <div 
+              className="md:hidden absolute inset-0 bg-slate-900/40 backdrop-blur-xs z-30 transition-opacity duration-300"
+              onClick={() => setIsSidebarOpen(false)}
+            />
+          )}
+          
           <div className="flex-1 flex flex-col min-w-0 h-full overflow-y-auto scroll-smooth">
             <main className="grow p-2 sm:p-6 lg:p-8">
               <div key={location.pathname} className="page-transition">

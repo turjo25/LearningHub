@@ -421,15 +421,17 @@ function LessonRow({ lesson, courseId, onEdit, onDelete, allAssignments, onAssig
   return (
     <div className="rounded-2xl bg-gray-50 border border-gray-200 overflow-hidden">
       {/* Lesson header row */}
-      <div className="flex items-center gap-3 p-4">
-        <span className="w-7 h-7 rounded-full bg-brand-100 border border-brand-200 flex items-center justify-center text-xs font-bold text-brand-600 flex-shrink-0">
-          {lesson.order + 1}
-        </span>
-        <div className="flex-1 min-w-0">
-          <p className="text-gray-900 font-bold truncate">{lesson.title}</p>
-          {lesson.video_url && <p className="text-xs text-brand-500 mt-0.5">▶ Video attached</p>}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <span className="w-7 h-7 rounded-full bg-brand-100 border border-brand-200 flex items-center justify-center text-xs font-bold text-brand-600 flex-shrink-0">
+            {lesson.order + 1}
+          </span>
+          <div className="flex-1 min-w-0">
+            <p className="text-gray-900 font-bold truncate">{lesson.title}</p>
+            {lesson.video_url && <p className="text-xs text-brand-500 mt-0.5">▶ Video attached</p>}
+          </div>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0 pt-3 sm:pt-0 border-t sm:border-0 border-slate-100/80 shrink-0">
           <button
             onClick={() => setExpanded((v) => !v)}
             className="text-xs text-gray-600 border border-gray-200 bg-white px-3 py-1.5 rounded-full hover:text-gray-900 hover:border-gray-300 transition-all font-semibold"

@@ -179,21 +179,31 @@ function Home() {
             </div>
 
             {/* Trust indicators */}
-            <div className="flex items-center gap-2 pt-2">
-              <div className="flex -space-x-2">
-                {["#6366f1","#8b5cf6","#a78bfa","#c4b5fd"].map((c, i) => (
-                  <div key={i} className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-xs font-bold text-white"
-                    style={{ background: c }}>
-                    {["A","B","C","D"][i]}
-                  </div>
-                ))}
-              </div>
-              <div className="flex flex-col pl-1">
-                <div className="flex items-center gap-0.5">
-                  {[1,2,3,4,5].map(s => <Star key={s} className="w-3 h-3 fill-amber-400 text-amber-400" />)}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 pt-2">
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-2">
+                  {["#6366f1","#8b5cf6","#a78bfa","#c4b5fd"].map((c, i) => (
+                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-xs font-bold text-white shadow-xs"
+                      style={{ background: c }}>
+                      {["A","B","C","D"][i]}
+                    </div>
+                  ))}
                 </div>
-                <span className="text-xs text-slate-400">50,000+ happy learners</span>
+                <div className="flex flex-col pl-1">
+                  <div className="flex items-center gap-0.5">
+                    {[1,2,3,4,5].map(s => <Star key={s} className="w-3 h-3 fill-amber-400 text-amber-400" />)}
+                  </div>
+                  <span className="text-xs text-slate-400 font-medium">50,000+ happy learners</span>
+                </div>
               </div>
+            </div>
+
+            {/* Mobile/Tablet stats grid */}
+            <div className="grid grid-cols-2 lg:hidden gap-4 pt-4 max-w-lg">
+              <StatBadge value="10,000+" label="Active Courses" icon={BookOpen} gradient="linear-gradient(135deg, #6366f1, #8b5cf6)" />
+              <StatBadge value="50,000+" label="Enrolled Students" icon={Users} gradient="linear-gradient(135deg, #8b5cf6, #a78bfa)" />
+              <StatBadge value="300+" label="Instructors" icon={Award} gradient="linear-gradient(135deg, #10b981, #059669)" />
+              <StatBadge value="4.9 / 5" label="Rating" icon={Star} gradient="linear-gradient(135deg, #f59e0b, #f97316)" />
             </div>
           </div>
 

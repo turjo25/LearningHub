@@ -191,7 +191,7 @@ export default function LessonViewer() {
         <span className="text-gray-900 truncate max-w-[180px] font-bold">{currentLesson?.title || "Lessons"}</span>
       </nav>
 
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex flex-col-reverse lg:flex-row gap-6">
         {/* ── Sidebar ── */}
         <aside className="lg:w-72 flex-shrink-0">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sticky top-24">

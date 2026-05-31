@@ -6,7 +6,7 @@ import {
   ClipboardList, PlusCircle, CheckSquare, GraduationCap, ChevronRight
 } from "lucide-react";
 
-export default function Sidebar({ isOpen }) {
+export default function Sidebar({ isOpen, onClose }) {
   const { user, isAuthLoading } = useAuth();
   const location = useLocation();
 
@@ -21,6 +21,11 @@ export default function Sidebar({ isOpen }) {
       <Link
         to={to}
         title={title || label}
+        onClick={() => {
+          if (onClose && window.innerWidth < 768) {
+            onClose();
+          }
+        }}
         className={`relative flex items-center ${
           isOpen ? "gap-3 px-3 py-2.5 mx-2" : "justify-center w-11 h-11 mx-auto"
         } mb-1 rounded-xl transition-all duration-200 group font-medium text-sm overflow-hidden ${
@@ -56,8 +61,10 @@ export default function Sidebar({ isOpen }) {
     );
 
   return (
-    <aside className={`relative flex-shrink-0 flex flex-col z-40 h-full transition-all duration-300 ease-out glass-sidebar ${
-      isOpen ? "w-60" : "w-[68px]"
+    <aside className={`absolute md:relative flex-shrink-0 flex flex-col z-40 h-full transition-all duration-300 ease-out glass-sidebar ${
+      isOpen
+        ? "w-60 translate-x-0"
+        : "w-0 -translate-x-full overflow-hidden border-r-0 md:w-[68px] md:translate-x-0 md:border-r"
     }`}>
       {/* ── Navigation ── */}
       <nav className="flex-1 py-4 flex flex-col overflow-y-auto overflow-x-hidden">

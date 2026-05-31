@@ -132,19 +132,19 @@ export default function TeacherDashboard() {
       )}
 
       {/* ── Stats ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
         {[
           { label: "Courses Created", value: myCourses.length, icon: BookOpen, color: "text-brand-600", bg: "bg-brand-50" },
           { label: "Total Students", value: totalStudents, icon: Users, color: "text-emerald-600", bg: "bg-emerald-50" },
           { label: "Pending Submissions", value: pendingSubmissions.length, icon: ClipboardList, color: "text-yellow-600", bg: "bg-yellow-50" },
         ].map((stat, i) => (
-          <div key={i} className="glass-panel p-6 flex items-center gap-4 hover:-translate-y-1 transition-transform duration-300">
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${stat.bg}`}>
-              <stat.icon className={`w-6 h-6 ${stat.color}`} />
+          <div key={i} className={`glass-panel p-4 sm:p-6 flex items-center gap-3 sm:gap-4 hover:-translate-y-1 transition-transform duration-300 ${i === 2 ? "col-span-2 sm:col-span-1" : ""}`}>
+            <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 ${stat.bg}`}>
+              <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`} />
             </div>
             <div>
-              <p className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">{stat.label}</p>
-              <p className="text-3xl font-display font-black text-slate-900">{stat.value}</p>
+              <p className="text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-0.5 sm:mb-1">{stat.label}</p>
+              <p className="text-xl sm:text-3xl font-display font-black text-slate-900 leading-tight">{stat.value}</p>
             </div>
           </div>
         ))}
