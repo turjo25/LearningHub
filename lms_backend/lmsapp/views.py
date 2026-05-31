@@ -280,14 +280,14 @@ class CategoryListCreateView(generics.ListCreateAPIView):
     """List all categories or create a new one (admin/teacher only for create)."""
     queryset = Category.objects.annotate(annotated_course_count=Count('courses'))
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated, IsTeacherOrReadOnly]
+    permission_classes = [IsTeacherOrReadOnly]
 
 
 class CategoryRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     """Retrieve, update, or delete a category (admin/teacher only for write)."""
     queryset = Category.objects.annotate(annotated_course_count=Count('courses'))
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated, IsTeacherOrReadOnly]
+    permission_classes = [IsTeacherOrReadOnly]
 
 
 # ---------------------------------------------------------------------------
@@ -304,7 +304,7 @@ class CourseListCreateView(generics.ListCreateAPIView):
       ?search=<text>   (searches title + description)
     """
     serializer_class = CourseSerializer
-    permission_classes = [IsAuthenticated, IsTeacherOrReadOnly]
+    permission_classes = [IsTeacherOrReadOnly]
 
     def get_queryset(self):
         qs = Course.objects.select_related('teacher__user', 'category').annotate(
@@ -351,7 +351,7 @@ class CourseRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
         annotated_average_rating=Avg('reviews__rating')
     ).prefetch_related('reviews', 'lessons')
     serializer_class = CourseSerializer
-    permission_classes = [IsAuthenticated, IsTeacherOrReadOnly]
+    permission_classes = [IsTeacherOrReadOnly]
 
 
 # ---------------------------------------------------------------------------

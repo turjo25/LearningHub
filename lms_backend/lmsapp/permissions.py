@@ -36,12 +36,12 @@ class IsStudent(permissions.BasePermission):
 
 class IsTeacherOrReadOnly(permissions.BasePermission):
     """
-    Safe (GET/HEAD/OPTIONS) requests are allowed to any authenticated user.
-    Write operations are restricted to teachers only.
+    Safe (GET/HEAD/OPTIONS) requests are allowed to any user (including anonymous).
+    Write operations are restricted to authenticated teachers only.
     """
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
-            return bool(request.user and request.user.is_authenticated)
+            return True
         return bool(
             request.user and
             request.user.is_authenticated and
