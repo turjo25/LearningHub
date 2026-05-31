@@ -13,8 +13,15 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 
+import environ
+import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Initialize environ
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -41,7 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'lmsapp',
-    'rest_framework'
+    'rest_framework',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -90,24 +98,32 @@ WSGI_APPLICATION = 'lms.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # Use PostgreSQL in Docker, SQLite locally
-if os.getenv('DATABASE_URL'):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('POSTGRES_DB', 'lms_db'),
-            'USER': os.getenv('POSTGRES_USER', 'lms_user'),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'lms_password'),
-            'HOST': os.getenv('DB_HOST', 'db'),
-            'PORT': os.getenv('DB_PORT', '5432'),
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+# if os.getenv('DATABASE_URL'):
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': os.getenv('POSTGRES_DB', 'lms_db'),
+#             'USER': os.getenv('POSTGRES_USER', 'lms_user'),
+#             'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'lms_password'),
+#             'HOST': os.getenv('DB_HOST', 'db'),
+#             'PORT': os.getenv('DB_PORT', '5432'),
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
+# Database Configuration
+DATABASES = {
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600
+    )
+}
+
 
 
 # Password validation
@@ -167,3 +183,31 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+# Supabase S3 Storage Configuration for Media
+import re
+_endpoint = os.getenv("SUPABASE_S3_ENDPOINT_URL", "")
+_match = re.search(r"https://([^.]+)\.storage\.supabase\.co", _endpoint)
+_project_ref = _match.group(1) if _match else ""
+_bucket = os.getenv("SUPABASE_S3_BUCKET_NAME", "media")
+_custom_domain = f"{_project_ref}.supabase.co/storage/v1/object/public/{_bucket}" if _project_ref else None
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": os.getenv("SUPABASE_S3_ACCESS_KEY_ID"),
+            "secret_key": os.getenv("SUPABASE_S3_SECRET_ACCESS_KEY"),
+            "bucket_name": _bucket,
+            "region_name": os.getenv("SUPABASE_S3_REGION_NAME"),
+            "endpoint_url": _endpoint,
+            "custom_domain": _custom_domain,
+            "default_acl": None,
+            "querystring_auth": False,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
