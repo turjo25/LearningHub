@@ -4,6 +4,13 @@ import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { GraduationCap, User, Phone, Lock, ArrowRight, Eye, EyeOff, CheckCircle, BookOpen, Award } from "lucide-react";
 
+const InputWrapper = ({ label, children }) => (
+  <div>
+    <label className="block text-sm font-semibold text-slate-700 mb-2">{label}</label>
+    {children}
+  </div>
+);
+
 function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -62,12 +69,6 @@ function Register() {
     },
   ];
 
-  const InputWrapper = ({ label, children }) => (
-    <div>
-      <label className="block text-sm font-semibold text-slate-700 mb-2">{label}</label>
-      {children}
-    </div>
-  );
 
   return (
     <div className="min-h-[calc(100vh-4rem)] grid lg:grid-cols-2 relative z-20">
