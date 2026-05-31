@@ -72,10 +72,10 @@ function Navbar({ toggleSidebar }) {
         ? "bg-white/90 backdrop-blur-2xl shadow-[0_2px_20px_rgba(0,0,0,0.06)] border-b border-slate-200/60"
         : "bg-white/80 backdrop-blur-xl border-b border-slate-100/60"
     }`}>
-      <div className="flex items-center justify-between px-4 sm:px-6 h-16 max-w-[1400px] mx-auto">
+      <div className="flex items-center justify-between px-3 sm:px-6 h-16 max-w-[1400px] mx-auto">
 
         {/* ── Left: Hamburger + Logo ── */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {user && (
             <button
               id="sidebar-toggle"
@@ -86,12 +86,12 @@ function Navbar({ toggleSidebar }) {
               <Menu className="w-5 h-5" />
             </button>
           )}
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-200"
+          <Link to="/" className="flex items-center gap-1.5 sm:gap-2.5 group shrink-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-200 shrink-0"
               style={{ background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" }}>
-              <GraduationCap className="w-5 h-5 text-white" />
+              <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
-            <span className="font-display font-bold text-base sm:text-lg text-slate-900 tracking-tight group-hover:text-brand-600 transition-colors duration-200">
+            <span className="font-display font-bold text-sm sm:text-base md:text-lg text-slate-900 tracking-tight group-hover:text-brand-600 transition-colors duration-200">
               Learning<span className="text-brand-500">Hub</span>
             </span>
           </Link>
@@ -118,7 +118,7 @@ function Navbar({ toggleSidebar }) {
         )}
 
         {/* ── Right: Actions ── */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {user ? (
             <>
               {/* Notification Bell */}
@@ -229,8 +229,8 @@ function Navbar({ toggleSidebar }) {
             </>
           ) : (
             <>
-              <Link to="/login" className="btn-ghost text-sm inline-flex">Sign In</Link>
-              <Link to="/register" className="btn-primary">
+              <Link to="/login" className="btn-ghost text-xs sm:text-sm inline-flex shrink-0">Sign In</Link>
+              <Link to="/register" className="btn-primary text-xs sm:text-sm shrink-0">
                 Get Started
               </Link>
             </>

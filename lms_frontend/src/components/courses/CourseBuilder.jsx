@@ -696,26 +696,30 @@ export default function CourseBuilder() {
   return (
     <div className="min-h-screen py-10 px-4 max-w-4xl mx-auto bg-[#f8f7ff]">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-8">
-        <button onClick={() => navigate(isNew ? "/dashboard" : `/courses/${courseId}`)}
-          className="text-gray-500 hover:text-gray-900 font-semibold transition-colors text-sm">
-          ← Back
-        </button>
-        <div className="flex-1">
-          <h1 className="text-3xl font-display font-bold text-gray-900">
-            {isNew ? "Create New Course" : `Edit: ${course?.title}`}
-          </h1>
-          <p className="text-gray-500 text-sm mt-0.5 font-medium">
-            {isNew ? "Fill in the details below to publish your course." : "Update course details, lessons, and assignments."}
-          </p>
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
+        <div className="flex items-start gap-3 flex-1 min-w-0">
+          <button onClick={() => navigate(isNew ? "/dashboard" : `/courses/${courseId}`)}
+            className="text-gray-500 hover:text-gray-900 font-semibold transition-colors text-sm shrink-0 mt-1">
+            ← Back
+          </button>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl sm:text-3xl font-display font-bold text-gray-900 break-words leading-tight">
+              {isNew ? "Create New Course" : `Edit: ${course?.title}`}
+            </h1>
+            <p className="text-gray-500 text-sm mt-1 font-medium leading-relaxed">
+              {isNew ? "Fill in the details below to publish your course." : "Update course details, lessons, and assignments."}
+            </p>
+          </div>
         </div>
         {!isNew && (
-          <button
-            onClick={() => setConfirmDeleteCourse(true)}
-            className="text-sm text-red-600 border border-red-200 bg-white px-4 py-2 rounded-xl hover:bg-red-50 transition-all font-semibold"
-          >
-            🗑 Delete Course
-          </button>
+          <div className="flex shrink-0 sm:mt-1">
+            <button
+              onClick={() => setConfirmDeleteCourse(true)}
+              className="text-sm text-red-600 border border-red-200 bg-white px-4 py-2 rounded-xl hover:bg-red-50 transition-all font-semibold w-full sm:w-auto flex items-center justify-center gap-1.5"
+            >
+              🗑 Delete Course
+            </button>
+          </div>
         )}
       </div>
 
@@ -738,15 +742,16 @@ export default function CourseBuilder() {
       {/* ── Lessons (only shown after course exists) ── */}
       {!isNew && (
         <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-display font-bold text-gray-900 flex items-center gap-2">
-              <span>🎬</span> Lessons
-              <span className="text-sm text-gray-500 font-normal">({lessons.length})</span>
+          <div className="flex items-center justify-between gap-4 mb-6">
+            <h2 className="text-base sm:text-lg font-display font-bold text-gray-900 flex items-center gap-1.5 min-w-0">
+              <span>🎬</span>
+              <span className="truncate">Lessons</span>
+              <span className="text-xs sm:text-sm text-gray-500 font-normal shrink-0">({lessons.length})</span>
             </h2>
             {editingLesson !== "new" && (
               <button
                 onClick={() => setEditingLesson("new")}
-                className="btn-primary text-sm"
+                className="btn-primary text-xs sm:text-sm px-3 sm:px-5 py-2 shrink-0"
               >
                 + Add Lesson
               </button>
